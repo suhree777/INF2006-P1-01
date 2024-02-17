@@ -1,0 +1,37 @@
+/* Card Styles */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    min-height: 225px;
+}
+
+.card-today {
+    background-color: #b4d3ee;
+}
+
+.card-yesterday {
+    background-color: #f5f5be;
+}
+
+.card-last-7-days {
+    background-color: #e6e6fa;
+}
+
+.card-last-30-days {
+    background-color: #ffdcd8;
+}
+
+.card-budget-left {
+    background-color: #98fb98;
+}
+
+.card-total-expenses {
+    background-color: #f08080;
+}
+
+.card-icon {
+    font-size: 50px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}

@@ -1,0 +1,44 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    min-height: 450px;
+}
+
+.card-budget {
+    box-shadow: 4px 4px 8px 8px rgba(29, 29, 29, 0.2);
+}
+
+.card-body h3 {
+    margin-top: 50px;
+}
+
+/* Budget's input field */
+#budgetInput {
+    font-size: 24px;
+    border: none;
+    border-bottom: 1px solid #373737;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    width: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#budgetInput:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Submit button */
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    cursor: pointer;
+}

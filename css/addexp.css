@@ -1,0 +1,50 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    min-height: 450px;
+}
+
+.card-add-exp {
+    box-shadow: 4px 4px 8px 8px rgba(29, 29, 29, 0.2);
+}
+
+form {
+    margin-top: 15px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+/* Input field styling */
+.form-control {
+    border: none;
+    border-bottom: 1px solid #373737;
+    margin-bottom: 50px;
+}
+
+/* Input field focus */
+.form-control:focus {
+    box-shadow: none;
+    border-color: #66afe9;
+}
+
+/* Width of input fields */
+.form-control.text-center {
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Submit button */
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    cursor: pointer;
+}

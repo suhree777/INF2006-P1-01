@@ -1,0 +1,58 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    min-height: 450px;
+}
+
+.card-report {
+    box-shadow: 4px 4px 8px 8px rgba(29, 29, 29, 0.2);
+    border-radius: 15px;
+    margin-bottom: 40px;
+    background: #fff;
+    padding: 2rem;
+}
+
+/* Style form elements */
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: bold;
+}
+
+.form-control {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    border-radius: 0;
+    font-size: 1rem;
+    padding: .375rem .75rem; /* Adjust padding to match the image */
+    margin: 0 auto 1.5rem auto; /* Center the input field */
+    width: 50%; /* Adjust width to match the image */
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #66afe9;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 576px) {
+    .form-control {
+        width: 75%; /* Increase width on smaller screens */
+    }
+}

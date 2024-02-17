@@ -1,6 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Reset and Basic Styles */
+::after,
+::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+/* Sidebar Styles */
 #sidebar {
-    overflow: hidden;
-    z-index: 3;
+    width: 70px;
+    min-width: 70px;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    background-color: #0e2238;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Ensure full height */
+}
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
 }
 
 #sidebar .list-group {
@@ -23,12 +57,11 @@
     white-space: nowrap;
 }
 
-/* highlight active menu */
+/* Sidebar state styles */
 #sidebar .list-group-item:not(.collapsed) {
     background-color: #eceaea;
 }
 
-/* closed state */
 #sidebar .list-group .list-group-item[aria-expanded="false"]::after {
     content: " \f0d7";
     font-family: FontAwesome;
@@ -37,7 +70,6 @@
     padding-left: 5px;
 }
 
-/* open state */
 #sidebar .list-group .list-group-item[aria-expanded="true"] {
     background-color: #eceaea;
 }
@@ -52,106 +84,6 @@
 
 #sidebar .list-group .collapse .list-group-item {
     padding-left: 20px;
-}
-
-@media (max-width:768px) {
-    #sidebar {
-        min-width: 35px;
-        max-width: 40px;
-        overflow-y: auto;
-        overflow-x: visible;
-        transition: all 0.25s ease;
-        transform: translateX(-45px);
-        position: fixed;
-    }
-
-    #sidebar.show {
-        transform: translateX(0);
-    }
-
-    #sidebar::-webkit-scrollbar {
-        width: 0px;
-    }
-
-    #sidebar,
-    #sidebar .list-group {
-        min-width: 1px;
-        overflow: visible;
-    }
-
-    /* overlay sub levels on small screens */
-    #sidebar .list-group .collapse.show {
-        position: relative;
-        z-index: 1;
-        width: 190px;
-        top: 0;
-    }
-
-    #sidebar .list-group>.list-group-item {
-        text-align: center;
-        padding: .75rem .5rem;
-    }
-
-    /* hide caret icons of top level when collapsed */
-    #sidebar .list-group>.list-group-item[aria-expanded="true"]::after,
-    #sidebar .list-group>.list-group-item[aria-expanded="false"]::after {
-        display: none;
-    }
-}
-
-.collapse.show {
-    visibility: visible;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-::after,
-::before {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-}
-
-.wrapper {
-    display: flex;
-}
-
-.main {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    transition: all 0.35s ease-in-out;
-    background-color: #fff;
-    min-width: 0;
-}
-
-#sidebar {
-    width: 70px;
-    min-width: 70px;
-    z-index: 1000;
-    transition: all .25s ease-in-out;
-    background-color: #0e2238;
-    display: flex;
-    flex-direction: column;
-}
-
-#sidebar.expand {
-    width: 260px;
-    min-width: 260px;
 }
 
 .toggle-btn {
@@ -190,7 +122,6 @@ body {
     0% {
         opacity: 0;
     }
-
     100% {
         opacity: 1;
     }
@@ -212,8 +143,8 @@ a.sidebar-link {
 
 .sidebar-link i,
 .dropdown-item i {
-    font-size: 1.1rem;
-    margin-right: .75rem;
+    font-size: 1.5rem;
+    vertical-align: middle;
 }
 
 a.sidebar-link:hover {
@@ -260,9 +191,70 @@ a.sidebar-link:hover {
     transition: all .2s ease-out;
 }
 
+/* Responsive Sidebar Styles */
+@media (max-width:768px) {
+    #sidebar {
+        min-width: 35px;
+        max-width: 40px;
+        overflow-y: auto;
+        overflow-x: visible;
+        transition: all 0.25s ease;
+        transform: translateX(-45px);
+        position: fixed;
+        height: 100vh;
+    }
+
+    #sidebar.show {
+        transform: translateX(0);
+    }
+
+    #sidebar::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    #sidebar,
+    #sidebar .list-group {
+        min-width: 1px;
+        overflow: visible;
+    }
+
+    #sidebar .list-group .collapse.show {
+        position: relative;
+        z-index: 1;
+        width: 190px;
+        top: 0;
+    }
+
+    #sidebar .list-group>.list-group-item {
+        text-align: center;
+        padding: .75rem .5rem;
+    }
+
+    #sidebar .list-group>.list-group-item[aria-expanded="true"]::after,
+    #sidebar .list-group>.list-group-item[aria-expanded="false"]::after {
+        display: none;
+    }
+}
+
+/* Main Content Styles */
+.wrapper {
+    display: flex;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    background-color: #fff;
+    min-width: 0;
+}
+
 .navbar {
     background-color: #f5f5f5;
-    box-shadow: 0 0 2rem 0 rgba(33, 37, 41, .1);
+    box-shadow: 0 0 2rem 0 rgba(94, 101, 108, 0.1);
 }
 
 .navbar-expand .navbar-collapse {
@@ -274,36 +266,6 @@ a.sidebar-link:hover {
     width: 40px;
 }
 
-/* Main Section */
-.card {
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    margin-bottom: 30px;
+.content {
+    margin-top: 10px;
 }
-
-.card-today {
-    background-color: #f0f8ff;
-}
-
-.card-yesterday {
-    background-color: #fafad2;
-}
-
-.card-last-7-days {
-    background-color: #e6e6fa;
-}
-
-.card-last-30-days {
-    background-color: #ffe4e1;
-}
-
-.card-budget-left {
-    background-color: #98fb98;
-}
-
-.card-total-expenses {
-    background-color: #f08080;
-}
-
-
-@media (min-width: 768px) {}
