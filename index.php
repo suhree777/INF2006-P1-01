@@ -17,7 +17,7 @@
                             <div class="col-12 col-md-4 ">
                                 <div class="card border-0 card-today">
                                     <div class="card-body py-4 text-center">
-                                        <i class="fa-solid fa-list card-icon"></i>
+                                        <i class="fa fa-list card-icon"></i>
                                         <h3 class="mb-3 fw-bold">
                                             Today's Expenses
                                         </h3>
@@ -30,7 +30,7 @@
                             <div class="col-12 col-md-4 ">
                                 <div class="card border-0 card-yesterday">
                                     <div class="card-body py-4 text-center">
-                                        <i class="fa-solid fa-rotate-left card-icon"></i>
+                                        <i class="fa fa-rotate-left card-icon"></i>
                                         <h3 class="mb-3 fw-bold">
                                             Yesterday's Expenses
                                         </h3>
@@ -43,7 +43,7 @@
                             <div class="col-12 col-md-4 ">
                                 <div class="card border-0 card-last-7-days">
                                     <div class="card-body py-4 text-center">
-                                        <i class="fa-solid fa-calendar-week card-icon"></i>
+                                        <i class="fa fa-calendar-o card-icon"></i>
                                         <h3 class="mb-3 fw-bold">
                                             Last 7 Days' Expenses
                                         </h3>
@@ -56,7 +56,7 @@
                             <div class="col-12 col-md-4 ">
                                 <div class="card border-0 card-last-30-days">
                                     <div class="card-body py-4 text-center">
-                                        <i class="fa-solid fa-calendar-days card-icon"></i>
+                                    <i class="fa fa-calendar card-icon" ></i>
                                         <h3 class="mb-3 fw-bold">
                                             Last 30 Days' Expenses
                                         </h3>
@@ -69,7 +69,7 @@
                             <div class="col-12 col-md-4 ">
                                 <div class="card border-0 card-budget-left">
                                     <div class="card-body py-4 text-center">
-                                        <i class="fa-solid fa-sack-dollar card-icon"></i>
+                                        <i class="fa fa-money card-icon"></i>
                                         <h3 class="mb-3 fw-bold">
                                             Monthly Budget Left
                                         </h3>
@@ -82,7 +82,7 @@
                             <div class="col-12 col-md-4 ">
                                 <div class="card border-0 card-total-expenses">
                                     <div class="card-body py-4 text-center">
-                                        <i class="fa-solid fa-file-invoice card-icon"></i>
+                                        <i class="fa fa-file-text-o card-icon"></i>
                                         <h3 class="mb-3 fw-bold">
                                             Total Expenses
                                         </h3>
