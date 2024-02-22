@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt = mysqli_prepare($connection, $query)) {
         // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "ssd", $dateOfExpense, $itemName, $itemCost);
+        mysqli_stmt_bind_param($stmt, "issd", $userId, $dateOfExpense, $itemName, $itemCost);
 
         // Execute the prepared statement
         if (mysqli_stmt_execute($stmt)) {
