@@ -1,11 +1,6 @@
-<head>
-    <?php include 'includes/head.inc.php'; ?>
-    <link rel="stylesheet" href="css/addexp.css">
-</head>
-
-
-<?php
-include "/var/www/inc/dbinfo.inc";
+<?php 
+session_start(); // Start the session at the very beginning
+include "/var/www/inc/dbinfo.inc"; // Include database connection settings
 
 // If the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -18,30 +13,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Retrieve and sanitize form data
-    $userId = filter_input(INPUT_POST, 'UserId', FILTER_SANITIZE_NUMBER_INT);
+    $userId = isset($_SESSION['UserId']) ? $_SESSION['UserId'] : 0; // Fetching UserId from session
     $itemName = filter_input(INPUT_POST, 'Item', FILTER_SANITIZE_STRING);
     $itemCost = filter_input(INPUT_POST, 'Cost', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $expenseDate = filter_input(INPUT_POST, 'Date', FILTER_SANITIZE_STRING); // Assuming you're capturing the date in the form
 
-    // Prepare an insert statement
-    $stmt = $connection->prepare("INSERT INTO expenses (UserId, Item, Cost, Date) VALUES (?, ?, ?, ?)");
-
-    // Bind variables to the prepared statement as parameters
-    $stmt->bind_param("issd", $userId, $itemName, $itemCost, $expenseDate);
-
-    // Set parameters and execute
-    if ($stmt->execute()) {
-        echo "Expense added successfully.";
+    // Validate UserId
+    if ($userId <= 0) {
+        echo "User ID is invalid. Please log in.";
     } else {
-        echo "ERROR: Could not execute query: " . $stmt->error;
-    }
+        // Prepare an insert statement
+        $stmt = $connection->prepare("INSERT INTO expenses (UserId, Item, Cost, Date) VALUES (?, ?, ?, ?)");
 
-    // Close statement and connection
-    $stmt->close();
+        // Bind variables to the prepared statement as parameters
+        $stmt->bind_param("issd", $userId, $itemName, $itemCost, $expenseDate);
+
+        // Set parameters and execute
+        if ($stmt->execute()) {
+            echo "Expense added successfully.";
+        } else {
+            echo "ERROR: Could not execute query: " . $stmt->error;
+        }
+
+        // Close statement and connection
+        $stmt->close();
+    }
     $connection->close();
 }
 ?>
 
+<head>
+    <?php include 'includes/head.inc.php'; ?>
+    <link rel="stylesheet" href="css/addexp.css">
+</head>
 <body>
     <div class="wrapper">
         <?php include 'includes/nav.inc.php'; ?>
@@ -57,22 +61,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="card border-0 card-add-exp">
                                     <div class="card-body py-5 text-center">
                                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                                            <!-- Hidden UserId -->
+                                            <input type="hidden" name="UserId" value="<?php echo isset($_SESSION['UserId']) ? $_SESSION['UserId'] : ''; ?>" />
+                                            
                                             <!-- Date of Expense -->
                                             <div class="mb-4">
                                                 <label for="dateOfExpense" class="form-label">Date of Expense:</label>
-                                                <input type="date" class="form-control text-center" id="dateOfExpense" required>
+                                                <input type="date" name="Date" class="form-control text-center" id="dateOfExpense" required>
                                             </div>
 
                                             <!-- Item Name -->
                                             <div class="mb-4">
                                                 <label for="itemName" class="form-label">Item:</label>
-                                                <input type="text" class="form-control text-center" id="itemName" placeholder="What did you buy?" required>
+                                                <input type="text" name="Item" class="form-control text-center" id="itemName" placeholder="What did you buy?" required>
                                             </div>
 
                                             <!-- Cost of Item -->
                                             <div class="mb-4">
                                                 <label for="itemCost" class="form-label">Cost of Item:</label>
-                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" step="0.01" required>
+                                                <input type="number" name="Cost" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" step="0.01" required>
                                             </div>
 
                                             <!-- Submit Button -->
