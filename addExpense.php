@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <!-- Cost of Item -->
                                             <div class="mb-4">
                                                 <label for="itemCost" class="form-label">Cost of Item:</label>
-                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" required>
+                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" step="0.01" required>
                                             </div>
 
                                             <!-- Submit Button -->
