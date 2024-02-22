@@ -3,47 +3,49 @@
     <link rel="stylesheet" href="css/addexp.css">
 </head>
 
+
 <?php
-include "../inc/dbinfo.inc"; // Include the database connection info
+include "/var/www/inc/dbinfo.inc";
 
-// Database connection
-$conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+// If the form is submitted, process the form data
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Create database connection
+    $connection = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Check connection
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        exit();
+    }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-    // Sanitize POST data
-    $userId = mysqli_real_escape_string($conn, $_POST['UserId']);
-    $item = mysqli_real_escape_string($conn, $_POST['Item']);
-    $cost = mysqli_real_escape_string($conn, $_POST['Cost']);
-    $date = mysqli_real_escape_string($conn, $_POST['Date']);
+    // Get form data and sanitize it
+    $dateOfExpense = mysqli_real_escape_string($connection, $_POST['dateOfExpense']);
+    $itemName = mysqli_real_escape_string($connection, $_POST['itemName']);
+    $itemCost = mysqli_real_escape_string($connection, $_POST['itemCost']);
 
     // Prepare an insert statement
-    $sql = "INSERT INTO expense (UserId, Item, Cost, Date) VALUES (?, ?, ?, ?)";
+    $query = "INSERT INTO expenses (Date, Item, Cost) VALUES (?, ?, ?)";
 
-    if ($stmt = $conn->prepare($sql)) {
+    if ($stmt = mysqli_prepare($connection, $query)) {
         // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("issd", $userId, $item, $cost, $date);
+        mysqli_stmt_bind_param($stmt, "ssd", $dateOfExpense, $itemName, $itemCost);
 
-        // Attempt to execute the prepared statement
-        if ($stmt->execute()) {
+        // Execute the prepared statement
+        if (mysqli_stmt_execute($stmt)) {
             echo "<p>Expense added successfully.</p>";
         } else {
-            echo "<p>Error: " . $stmt->error . "</p>";
+            echo "<p>Error adding expense: " . mysqli_stmt_error($stmt) . "</p>";
         }
-        
-        // Close statement
-        $stmt->close();
-    } else {
-        echo "<p>Error: " . $conn->error . "</p>";
-    }
-}
 
-// Close connection
-$conn->close();
+        // Close statement
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "<p>Error preparing statement: " . mysqli_error($connection) . "</p>";
+    }
+
+    // Close connection
+    mysqli_close($connection);
+}
 ?>
 
 <body>
@@ -61,29 +63,26 @@ $conn->close();
                                 <div class="card border-0 card-add-exp">
                                     <div class="card-body py-5 text-center">
                                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                            <!-- User ID (hidden, assuming you are getting it from session or another method) -->
-                                            <input type="hidden" name="UserId" value="TheUserIdValue" />
-
                                             <!-- Date of Expense -->
                                             <div class="mb-4">
                                                 <label for="dateOfExpense" class="form-label">Date of Expense:</label>
-                                                <input type="date" class="form-control text-center" id="dateOfExpense" name="Date" required>
+                                                <input type="date" class="form-control text-center" id="dateOfExpense" required>
                                             </div>
 
                                             <!-- Item Name -->
                                             <div class="mb-4">
                                                 <label for="itemName" class="form-label">Item:</label>
-                                                <input type="text" class="form-control text-center" id="itemName" name="Item" placeholder="What did you buy?" required>
+                                                <input type="text" class="form-control text-center" id="itemName" placeholder="What did you buy?" required>
                                             </div>
 
                                             <!-- Cost of Item -->
                                             <div class="mb-4">
                                                 <label for="itemCost" class="form-label">Cost of Item:</label>
-                                                <input type="number" class="form-control text-center" id="itemCost" name="Cost" placeholder="How much did it cost?" required>
+                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" required>
                                             </div>
 
                                             <!-- Submit Button -->
-                                            <button type="submit" name="submit" class="btn btn-success">Add Expense</button>
+                                            <button type="submit" class="btn btn-success">Add</button>
                                         </form>
                                     </div>
                                 </div>
