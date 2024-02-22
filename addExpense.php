@@ -7,44 +7,38 @@
 <?php
 include "/var/www/inc/dbinfo.inc";
 
-// If the form is submitted, process the form data
+// If the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Create database connection
-    $connection = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+    $connection = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
     // Check connection
-    if (mysqli_connect_errno()) {
-        echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        exit();
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
     }
 
-    // Get form data and sanitize it
-    $dateOfExpense = mysqli_real_escape_string($connection, $_POST['dateOfExpense']);
-    $itemName = mysqli_real_escape_string($connection, $_POST['itemName']);
-    $itemCost = mysqli_real_escape_string($connection, $_POST['itemCost']);
+    // Retrieve and sanitize form data
+    $userId = filter_input(INPUT_POST, 'UserId', FILTER_SANITIZE_NUMBER_INT);
+    $itemName = filter_input(INPUT_POST, 'Item', FILTER_SANITIZE_STRING);
+    $itemCost = filter_input(INPUT_POST, 'Cost', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $expenseDate = filter_input(INPUT_POST, 'Date', FILTER_SANITIZE_STRING); // Assuming you're capturing the date in the form
 
     // Prepare an insert statement
-    $query = "INSERT INTO expenses (Date, Item, Cost) VALUES (?, ?, ?)";
+    $stmt = $connection->prepare("INSERT INTO expenses (UserId, Item, Cost, Date) VALUES (?, ?, ?, ?)");
 
-    if ($stmt = mysqli_prepare($connection, $query)) {
-        // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "ssd", $dateOfExpense, $itemName, $itemCost);
+    // Bind variables to the prepared statement as parameters
+    $stmt->bind_param("issd", $userId, $itemName, $itemCost, $expenseDate);
 
-        // Execute the prepared statement
-        if (mysqli_stmt_execute($stmt)) {
-            echo "<p>Expense added successfully.</p>";
-        } else {
-            echo "<p>Error adding expense: " . mysqli_stmt_error($stmt) . "</p>";
-        }
-
-        // Close statement
-        mysqli_stmt_close($stmt);
+    // Set parameters and execute
+    if ($stmt->execute()) {
+        echo "Expense added successfully.";
     } else {
-        echo "<p>Error preparing statement: " . mysqli_error($connection) . "</p>";
+        echo "ERROR: Could not execute query: " . $stmt->error;
     }
 
-    // Close connection
-    mysqli_close($connection);
+    // Close statement and connection
+    $stmt->close();
+    $connection->close();
 }
 ?>
 
@@ -78,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <!-- Cost of Item -->
                                             <div class="mb-4">
                                                 <label for="itemCost" class="form-label">Cost of Item:</label>
-                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" required>
+                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" step="0.01" required>
                                             </div>
 
                                             <!-- Submit Button -->
