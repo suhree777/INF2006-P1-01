@@ -1,51 +1,53 @@
-<?php 
-session_start(); // Start the session at the very beginning
-include "/var/www/inc/dbinfo.inc"; // Include database connection settings
-
-// If the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Create database connection
-    $connection = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-
-    // Check connection
-    if ($connection->connect_error) {
-        die("Connection failed: " . $connection->connect_error);
-    }
-
-    // Retrieve and sanitize form data
-    $userId = isset($_SESSION['UserId']) ? $_SESSION['UserId'] : 0; // Fetching UserId from session
-    $itemName = filter_input(INPUT_POST, 'Item', FILTER_SANITIZE_STRING);
-    $itemCost = filter_input(INPUT_POST, 'Cost', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    $expenseDate = filter_input(INPUT_POST, 'Date', FILTER_SANITIZE_STRING); // Assuming you're capturing the date in the form
-
-    // Validate UserId
-    if ($userId <= 0) {
-        echo "User ID is invalid. Please log in.";
-    } else {
-        // Prepare an insert statement
-        $stmt = $connection->prepare("INSERT INTO expenses (UserId, Item, Cost, Date) VALUES (?, ?, ?, ?)");
-
-        // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("issd", $userId, $itemName, $itemCost, $expenseDate);
-
-        // Set parameters and execute
-        if ($stmt->execute()) {
-            echo "Expense added successfully.";
-        } else {
-            echo "ERROR: Could not execute query: " . $stmt->error;
-        }
-
-        // Close statement and connection
-        $stmt->close();
-    }
-    $connection->close();
-}
-?>
-
 <head>
     <?php include 'includes/head.inc.php'; ?>
     <link rel="stylesheet" href="css/addexp.css">
 </head>
+
+<?php
+include "/var/www/inc/dbinfo.inc";
+
+// If the form is submitted, process the form data
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Create database connection
+    $connection = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+
+    // Check connection
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        exit();
+    }
+
+    // Get form data and sanitize it
+    $userId = /* Logic to get current user's ID, e.g., from session */;
+    $dateOfExpense = mysqli_real_escape_string($connection, $_POST['dateOfExpense']);
+    $itemName = mysqli_real_escape_string($connection, $_POST['itemName']);
+    $itemCost = mysqli_real_escape_string($connection, $_POST['itemCost']);
+
+    // Prepare an insert statement
+    $query = "INSERT INTO expenses (UserId, Date, Item, Cost) VALUES (?, ?, ?, ?)";
+
+    if ($stmt = mysqli_prepare($connection, $query)) {
+        // Bind variables to the prepared statement as parameters
+        mysqli_stmt_bind_param($stmt, "issd", $userId, $dateOfExpense, $itemName, $itemCost);
+
+        // Execute the prepared statement
+        if (mysqli_stmt_execute($stmt)) {
+            echo "<p>Expense added successfully.</p>";
+        } else {
+            echo "<p>Error adding expense: " . mysqli_stmt_error($stmt) . "</p>";
+        }
+
+        // Close statement
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "<p>Error preparing statement: " . mysqli_error($connection) . "</p>";
+    }
+
+    // Close connection
+    mysqli_close($connection);
+}
+?>
+
 <body>
     <div class="wrapper">
         <?php include 'includes/nav.inc.php'; ?>
@@ -61,25 +63,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="card border-0 card-add-exp">
                                     <div class="card-body py-5 text-center">
                                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                            <!-- Hidden UserId -->
-                                            <input type="hidden" name="UserId" value="<?php echo isset($_SESSION['UserId']) ? $_SESSION['UserId'] : ''; ?>" />
-                                            
                                             <!-- Date of Expense -->
                                             <div class="mb-4">
                                                 <label for="dateOfExpense" class="form-label">Date of Expense:</label>
-                                                <input type="date" name="Date" class="form-control text-center" id="dateOfExpense" required>
+                                                <input type="date" class="form-control text-center" id="dateOfExpense" name="dateOfExpense" required>
                                             </div>
 
                                             <!-- Item Name -->
                                             <div class="mb-4">
                                                 <label for="itemName" class="form-label">Item:</label>
-                                                <input type="text" name="Item" class="form-control text-center" id="itemName" placeholder="What did you buy?" required>
+                                                <input type="text" class="form-control text-center" id="itemName" name="itemName" placeholder="What did you buy?" required>
                                             </div>
 
                                             <!-- Cost of Item -->
                                             <div class="mb-4">
                                                 <label for="itemCost" class="form-label">Cost of Item:</label>
-                                                <input type="number" name="Cost" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" step="0.01" required>
+                                                <input type="number" class="form-control text-center" id="itemCost" name="itemCost" placeholder="How much did it cost?" required>
                                             </div>
 
                                             <!-- Submit Button -->
