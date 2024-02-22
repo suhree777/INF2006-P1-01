@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="css/addexp.css">
 </head>
 
+
 <?php
 include "/var/www/inc/dbinfo.inc";
 
@@ -18,17 +19,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Get form data and sanitize it
-    $userId = /* Logic to get current user's ID, e.g., from session */;
     $dateOfExpense = mysqli_real_escape_string($connection, $_POST['dateOfExpense']);
     $itemName = mysqli_real_escape_string($connection, $_POST['itemName']);
     $itemCost = mysqli_real_escape_string($connection, $_POST['itemCost']);
 
     // Prepare an insert statement
-    $query = "INSERT INTO expenses (UserId, Date, Item, Cost) VALUES (?, ?, ?, ?)";
+    $query = "INSERT INTO expenses (Date, Item, Cost) VALUES (?, ?, ?)";
 
     if ($stmt = mysqli_prepare($connection, $query)) {
         // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "issd", $userId, $dateOfExpense, $itemName, $itemCost);
+        mysqli_stmt_bind_param($stmt, "ssd", $dateOfExpense, $itemName, $itemCost);
 
         // Execute the prepared statement
         if (mysqli_stmt_execute($stmt)) {
@@ -66,19 +66,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <!-- Date of Expense -->
                                             <div class="mb-4">
                                                 <label for="dateOfExpense" class="form-label">Date of Expense:</label>
-                                                <input type="date" class="form-control text-center" id="dateOfExpense" name="dateOfExpense" required>
+                                                <input type="date" class="form-control text-center" id="dateOfExpense" required>
                                             </div>
 
                                             <!-- Item Name -->
                                             <div class="mb-4">
                                                 <label for="itemName" class="form-label">Item:</label>
-                                                <input type="text" class="form-control text-center" id="itemName" name="itemName" placeholder="What did you buy?" required>
+                                                <input type="text" class="form-control text-center" id="itemName" placeholder="What did you buy?" required>
                                             </div>
 
                                             <!-- Cost of Item -->
                                             <div class="mb-4">
                                                 <label for="itemCost" class="form-label">Cost of Item:</label>
-                                                <input type="number" class="form-control text-center" id="itemCost" name="itemCost" placeholder="How much did it cost?" required>
+                                                <input type="number" class="form-control text-center" id="itemCost" placeholder="How much did it cost?" required>
                                             </div>
 
                                             <!-- Submit Button -->
